@@ -13,19 +13,34 @@ class color:
 
 print(color.BOLD+" -------------------------------------------- Hungarian Method --------------------------------------------- "+color.END)
 
+flag = 1
+while flag:
+    print( "Choose the correct option: \n" )
+    print( "1. Minimization \n2. Maximization" )
+    choice = int(input( "Enter the option : " ))
+    if choice != 1 and choice != 2:
+        print( "Wrong Choice \n" )
+        print( "Enter again" )
+
+    else:
+        print( "\n" )
+        flag = 0
+
+
 order = 0
-print("Enter the dimension of the input matrix")
-m = int(input("Row Matrix : "))
+print(color.UNDERLINE+"Enter the dimension of the input matrix"+color.END+" : \n")
+m = int(input("Row Matrix : ")) 
 n = int(input("Column Matrix : "))
+print("\n")
 
 if m == n:
-    print("The entered matrix is a balanced assignment problem\n")
-    disp = "The entered matrix is : "
+    print(color.BOLD+"The entered matrix is a balanced assignment problem."+color.END+"\n")
+    d = color.UNDERLINE+"The entered matrix"+color.END+" : "
     order = m
 
 else:
-    print("The entered matrix is a unbalanced assignment problem\n")
-    disp = "The entered matrix after balancing is : "
+    print(color.BOLD+"The entered matrix is a unbalanced assignment problem."+color.END+"\n")
+    d = color.UNDERLINE+"The entered matrix after balancing"+color.END+" : "
 
     if m > n:
         order = m
@@ -37,7 +52,7 @@ array = [[0 for i in range(order)] for j in range(order)]
 result_array = [[0 for i in range(order)] for j in range(order)]
 xyz_array = [[0 for i in range(order)] for j in range(order)]
 
-print("Enter the matrix\n")
+print(color.UNDERLINE+"Enter the matrix"+color.END+" : \n")
 for i in range (m):
 
     for j in range(n):
@@ -51,24 +66,26 @@ for i in range (m):
 
 #  ----------------------------------------------------------- Display of Matrix ----------------------------------------------------------
 
-print("\n"+disp+"\n")
+print(color.RED+"\n"+d+"\n")
+print(color.RED)
 for i in range(order):
 
     for j in range(order):
         print(array[i][j], end = "\t")
     print("\n")
+print(color.END)
 
-rowredn_array = [[0 for i in range(order)] for j in range(order)]
+rowred_array = [[0 for i in range(order)] for j in range(order)]
 new_array = [[0 for i in range(order)] for j in range(order)]
 
 # ---------------------------------------------------------- Row & Column Reduction -----------------------------------------------------
 
-def rowcolredn(array):
+def row_col_red(array):
 
 # -------------------------------------------------------------- Row Reduction -----------------------------------------------------------
     
-    minr = []
-    minc = []
+    min_r = []
+    min_c = []
 
     for i in range(order):
         m = array[i][0]
@@ -77,36 +94,38 @@ def rowcolredn(array):
             if array[i][j] <= m:
                 m = array[i][j]
 
-        minr.append(m)
+        min_r.append(m)
 
     for i in range(order):
 
         for j in range(order):
-            rowredn_array[i][j] = array[i][j] - minr[i]
+            rowred_array[i][j] = array[i][j] - min_r[i]
 
 # ------------------------------------------------------------- Column Reduction ----------------------------------------------------------
 
     for i in range(order):
-        m = rowredn_array[0][i]
+        m = rowred_array[0][i]
 
         for j in range(order):
 
-            if rowredn_array[j][i] <= m:
-                m = rowredn_array[j][i]
+            if rowred_array[j][i] <= m:
+                m = rowred_array[j][i]
 
-        minc.append(m)
+        min_c.append(m)
 
     for i in range(order):
 
         for j in range(order):
-            new_array[j][i] = rowredn_array[j][i] - minc[i]
+            new_array[j][i] = rowred_array[j][i] - min_c[i]
 
-    # print(minr)
-    # print(minc)
-    # print(rowredn_array)
+    # print(min_r)
+    # print(min_c)
+    # print(rowred_array)
     # print(new_array)
 
-    print("\nThe matrix after Row and Column reduction : \n")
+# ---------------------------------------------------------- Printing reduced Matrix ----------------------------------------------------------
+
+    print(color.UNDERLINE+"\nThe matrix after Row and Column reduction"+color.END+" : \n")
     for i in range (order):
 
         for j in range (order):
@@ -126,6 +145,7 @@ def rowcolredn(array):
 
 def row_zero(new_array):
     
+    count_array = []
     i = 0
     while i < order:
         count = 0
@@ -136,7 +156,9 @@ def row_zero(new_array):
                 pos2 = j
                 count = count + 1
 
-        i = i + 1            
+        count_array.append(count)
+        i = i + 1 
+
         if count == 1:
             new_array[pos1][pos2] = 'x'
             for k in range (order):
@@ -145,13 +167,22 @@ def row_zero(new_array):
                     new_array[k][pos2] = '|'
             i = 0
 
+        if len(count_array) == order:
+            max = 0
+            for a in range( len(count_array) ):
+                if max >= count_array[a]:
+                    max = count_array[a]
+                    pos = a
                 
-    print("\nMatrix after row scanning : \n")
+# ----------------------------------------------------- Printing altered Matrix ----------------------------------------------------------
+
+    print(color.UNDERLINE+"\nMatrix after row scanning"+color.END+" : \n")
     for i in range (order):
 
         for j in range (order):
-            print(new_array[i][j], end = "\t")
+                print(new_array[i][j], end = "\t")
         print("\n")
+    # print(count_array)
 
     flag = 0
     i = 0
@@ -169,6 +200,7 @@ def row_zero(new_array):
 
 def col_zero(new_array):
 
+    count_array = []
     i = 0
     while i < order:
         count = 0
@@ -179,6 +211,7 @@ def col_zero(new_array):
                 pos2 = j
                 count = count + 1
         
+        count_array.append(count)
         i = i + 1
 
         if count == 1:
@@ -193,14 +226,18 @@ def col_zero(new_array):
                     new_array[pos2][k] = '+'
             j = 0
 
-    print("\nMatrix after column scanning : \n")
+# ---------------------------------------------------- Printing altered Matrix ----------------------------------------------------------
+
+    print(color.UNDERLINE+"\nMatrix after column scanning"+color.END+" : \n")
     for i in range (order):
 
         for j in range (order):
             print(new_array[i][j], end = "\t")
         print("\n")
 
-# ----------------------------------------------- Detection of min undeleted value ------------------------------------------------------
+    # print(count_array)
+
+# ----------------------------------------------- Detection of min un-deleted value ------------------------------------------------------
 
 def min_detect(new_array):
 
@@ -240,30 +277,58 @@ def optimize(new_array):
     op = []
     co = []
 
-    print("\nThe Optimized solution is : \n")
-    print("\tJOB\t  |\tOPERATOR\t")
+    print(color.GREEN)
+    print("\n"+color.UNDERLINE+"The Optimized solution"+color.END+" : \n")
+    print(color.GREEN)
+    print("JOB\t  |\tOPERATOR\t")
+    print(color.END)
     for i in range (order):
 
         for j in range (order):
             if new_array[i][j] == 'x':
                 co.append(xyz_array[i][j])
                 op.append(j+1)
-    
+
+    print(color.GREEN)
     for i in range (order):
-        print("\t",i+1,"\t  |\t  ",op[i],"\t")
+        print(i+1,"\t  |\t  ",op[i],"\t")
         cost = cost + co[i]
     print("\n")
 
     print( " The cost is : ", cost )
+    print(color.END)
 
+# ------------------------------------------------------ maximization to minimization ---------------------------------------------------------------
 
+def maximum(array):
+    maxi = 0
+
+    for i in range (order):
+
+        for j in range (order):
+            if array[i][j] >= maxi:
+                maxi = array[i][j]
+        
+    for i in range (order):
+
+        for j in range (order):
+            array[i][j] = maxi - array[i][j] 
+
+    # print(array)
+
+# ---------------------------------------------- Checking if it is a maximization problem ---------------------------------------------------------------
+
+if choice == 2:
+    maximum(array)
+
+# ---------------------------------------------------------- While loop ---------------------------------------------------------------
 
 flag_check = True
 while(flag_check):
 
 # ---------------------------------------------------------- Function Calls ---------------------------------------------------------------
-    
-    rowcolredn(array)
+
+    row_col_red(array)
 
     flag = row_zero(new_array)
     if flag == 1:
